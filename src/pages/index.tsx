@@ -5,8 +5,11 @@ import Tabela from "../components/Tabela";
 import styles from "../styles/Home.module.css";
 import Cliente from "../core/Cliente";
 import Botao from "../components/Botao";
+import Formulario from "../components/Formulario";
+import { useState } from "react";
 
 export default function Home() {
+
   const clientes = [
     new Cliente("Amanda", 27, "1"),
     new Cliente("Willian", 26, "2"),
@@ -20,6 +23,12 @@ export default function Home() {
     console.log(`Excluir...${cliente.nome}`);
   }
 
+  function salvarCliente(cliente: Cliente) {
+    console.log(cliente)
+  }
+
+  const [show, setShow] = useState<'tabela' | 'formulario'>('tabela');
+
   return (
     <div
       className={`
@@ -29,15 +38,30 @@ export default function Home() {
     `}
     >
       <Layout titulo="Cadastro Simples">
-        <div className="flex justify-end">
-          <Botao cor="green">Novo Cliente</Botao>
-        </div>
+        {show === 'tabela' ? (
+          <>
+            <div className="flex justify-end">
+              <Botao 
+                className={'bg-gradient-to-r from-green-400 to-green-700'} 
+                onClick={() => setShow('formulario')}
+                >
+                  Novo Cliente
+                </Botao>
+            </div>
 
-        <Tabela
-          clientes={clientes}
-          clienteSelecionado={clienteSelecionado}
-          clienteExcluido={clienteExcluido}
-        ></Tabela>
+            <Tabela
+              clientes={clientes}
+              clienteSelecionado={clienteSelecionado}
+              clienteExcluido={clienteExcluido}
+            ></Tabela>
+          </>
+        ) : (
+          <Formulario 
+            cliente={clientes[0]} 
+            clienteMudou={salvarCliente} 
+            cancelado={() => setShow('tabela')}
+          />
+        )}
       </Layout>
     </div>
   );

@@ -10,13 +10,17 @@ import { useState } from "react";
 
 export default function Home() {
 
+  const [show, setShow] = useState<'tabela' | 'formulario'>('tabela');
+  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio())
+
   const clientes = [
     new Cliente("Amanda", 27, "1"),
     new Cliente("Willian", 26, "2"),
   ];
 
   function clienteSelecionado(cliente: Cliente) {
-    console.log(cliente.nome);
+    setCliente(cliente);
+    setShow('formulario');
   }
 
   function clienteExcluido(cliente: Cliente) {
@@ -24,10 +28,13 @@ export default function Home() {
   }
 
   function salvarCliente(cliente: Cliente) {
-    console.log(cliente)
+    setShow('tabela');
   }
 
-  const [show, setShow] = useState<'tabela' | 'formulario'>('tabela');
+  function novoCliente() {
+    setCliente(Cliente.vazio())
+    setShow('formulario');
+  }
 
   return (
     <div
@@ -43,7 +50,7 @@ export default function Home() {
             <div className="flex justify-end">
               <Botao 
                 className={'bg-gradient-to-r from-green-400 to-green-700'} 
-                onClick={() => setShow('formulario')}
+                onClick={novoCliente}
                 >
                   Novo Cliente
                 </Botao>
@@ -57,7 +64,7 @@ export default function Home() {
           </>
         ) : (
           <Formulario 
-            cliente={clientes[0]} 
+            cliente={cliente} 
             clienteMudou={salvarCliente} 
             cancelado={() => setShow('tabela')}
           />
